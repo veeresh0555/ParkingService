@@ -2,6 +2,8 @@ package com.parking.controller;
 import java.text.ParseException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +32,18 @@ public class ParkingController {
 	@Autowired
 	ParkingService parkingservice;
 	
+	private static final Logger logger=LoggerFactory.getLogger(ParkingController.class);
+	
 	@GetMapping
 	public ResponseEntity<List<Employee>> findAllemployees() throws RecordNotFoundException{
+		logger.debug("Enter findAllemployees method ");
 		return employeeclient.findAllemployees();
 	}
 	
 	@PostMapping
 	public ResponseEntity<SpaceAvailability> releaseparkspace(@RequestBody ParkingspaceReleaseVO request)throws RecordNotFoundException, ParseException {
 		SpaceAvailability spacerelease=parkingservice.realeaseparkingspace(request);
+		logger.debug("Enter releaseparkspace method ");
 		return new ResponseEntity<SpaceAvailability>(spacerelease, HttpStatus.OK);
 	}
 	

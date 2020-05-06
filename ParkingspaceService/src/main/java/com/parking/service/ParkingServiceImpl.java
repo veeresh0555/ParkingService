@@ -7,9 +7,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.parking.exception.RecordNotFoundException;
 import com.parking.model.Parkinglot;
 import com.parking.model.Requestingparkingspace;
@@ -30,6 +34,8 @@ public class ParkingServiceImpl implements ParkingService {
 	
 	@Autowired
 	ParkingLotRepository plotRepository;
+	
+	private static final Logger logger=LoggerFactory.getLogger(ParkingServiceImpl.class);
 	
 	@Autowired
 	ReqParkingSpaceRepository reqRepository;
@@ -58,9 +64,11 @@ public class ParkingServiceImpl implements ParkingService {
 				 parkinglot.setNoofdays(days);//Parkinglotsetdays
 				 parkinglot.setStatus("V");//default status-A(available) -v for vacation
 				 parkinglot =plotRepository.save(parkinglot);
-				 
+				 logger.debug("parkinglot::GetId: "+parkinglot.getEid());
 				 if(parkinglot.getEid()==0) {
+					 logger.debug("ParkingLot Status and days Not Updated ");
 					throw new RecordNotFoundException("ParkingLot Status and days Not Updated ");
+					
 				 }
 				 return pRepository.save(space);
 		}else {
